@@ -11,6 +11,8 @@
 3. **React Native编写原生应用**
 4. **高效(优秀的Diffing算法)**
 
+
+
 ##### 1.1.2 React高效的原因
 
 1. **使用虚拟(virtual)DOM,不总是直接操作页面真实DOM**
@@ -42,6 +44,8 @@
   </script>
 </body>
 ```
+
+
 
 ##### 1.2.2 创建虚拟DOM的两种方式
 
@@ -85,6 +89,8 @@
 </body>
 ```
 
+
+
 ##### 1.2.3 关于虚拟DOM
 
 1. **本质上是一个Object类型的对象(一般对象)**
@@ -114,6 +120,8 @@
    c. **PS2: 它最终产生的就是一个JS对象**
 
 5. **标签名任意: HTML标签或其他标签**
+
+
 
 ##### 1.3.2 JSX语法规则
 
@@ -156,6 +164,8 @@
 
    1. 若小写字母开头, 则将该标签转换为HTML中同名元素, 若HTML中无该标签对应的同名元素, 则报错
    2. 若大写字母开头, React就去渲染对应组件, 若组件没有定义, 则报错
+
+
 
 ##### 1.3.3 JSX小练习
 
@@ -218,15 +228,21 @@
 2. **为什么要拆分为模块: 随着业务逻辑增加, 代码越来越复杂**
 3. **作用: 复用JS, 简化JS的编写, 提高JS运行效率**
 
+
+
 ##### 1.4.2 组件
 
 1. **理解: 用来实现局部功能效果的代码和资源的集合(html/css/js/image等等)**
 2. **为什么: 一个界面的功能更复杂**
 3. **作用: 复用编码, 简化项目代码. 提高运行效率**
 
+
+
 ##### 1.4.3 模块化
 
 ​	**当应用的JS都以模块来编写, 这个应用就是一个模块化的应用**
+
+
 
 ##### 1.4.4 组件化
 
@@ -240,7 +256,7 @@
 
 #### 2.1 基本理解与使用
 
-##### 2.2.1 函数式组件
+##### 2.1.1 函数式组件
 
 ``` react
 <script type="text/babel">
@@ -253,12 +269,43 @@
 </script>
 ```
 
-**执行了`RenderDOM.render(<Demo/>....)`后, 发生了什么事情**
+###### **执行了`RenderDOM.render(<Demo/>....)`后, 发生了什么事情**
 
 1. React解析组件标签, 找到Demo组件
 2. 发现组件是使用函数定义的, 随后调用该函数, 将返回的虚拟DOM转换成真实DOM, 随后呈现在页面中.
 
-##### 2.2.2 类式组件
+
+
+##### 2.1.2 类式组件
+
+``` react
+<script type="text/babel">
+    // 1. 创建类式组件
+    class MyComponent extends React.Component {
+        render() {
+            // render()是放在哪里的? MyComponent的原型对象上, 供实例使用
+            // render()中的this是谁? MyComponent的实例对象 <=> MyComponent组件实例对象
+            return <h1>I am Jater</h1>
+        }
+    }
+    // 2. 渲染组件到界面
+    ReactDOM.render(<MyComponent/>, document.getElementById("test"))
+</script>
+```
+
+###### **执行了`ReactDOM.render(<MyComponent/> ...)`后, 发生了什么?**
+
+1. **执行了ReactDOM.render(<MyComponent/> ...)后, 发生了什么?**
+2. **发现组件是使用类定义的, 随后new出来该类的实例, 并通过该实例调用到原型上的render方法.**
+3. **将render返回的虚拟DOM转换为真实DOM, 随后呈现在页面中.**
+
+###### **MyComponent的render()是放在哪里的?**
+
+- MyComponent的原型对象上, 供实例使用
+
+###### MyComponent中的this是谁?
+
+- MyComponent的实例对象 <=> MyComponent组件实例对象
 
 # Others
 
