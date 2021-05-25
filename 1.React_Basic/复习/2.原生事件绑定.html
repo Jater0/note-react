@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>原生事件绑定</title>
+</head>
+<body>
+  <button id="btn1">Button 01</button>
+  <button id="btn2">Button 02</button>
+  <button onclick="demo()">Button 03</button>
+  <script type="text/javascript">
+    const btn1 = document.getElementById("btn1")
+    btn1.addEventListener("click", () => {
+      alert("button 01 has been clicked")
+    })
+
+    const btn2 = document.getElementById("btn2")
+    btn2.onclick = () => {
+      alert("button 02 has been clicked")
+    }
+
+    function demo() {
+      alert("button 03 has been clicked")
+    }
+  </script>
+</body>
+</html>

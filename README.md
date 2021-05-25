@@ -307,6 +307,149 @@
 
 - MyComponent的实例对象 <=> MyComponent组件实例对象
 
+-----
+
+
+
+#### 2.2 组件实例的三大核心属性 ---- state
+
+##### 2.2.1 Demo
+
+``` react
+<script type="text/babel">
+    class Weather extends React.Component {
+        constructor(props) {
+            super(props);
+            this.state = {
+                isHot: true,
+                wind: "微风"
+            }
+            // 解决changeWeatherState中this指向的问题
+            this.changeState = this.changeWeatherState.bind(this)
+        }
+
+        // render调用 1+n次 1是初始化 n是状态更新次数
+        render() {
+            const {isHot, wind} = this.state
+            // onClick JSX语法驼峰命名
+            return <h2 onClick={this.changeState}>So {isHot?"Hot":"Cold"} today, {wind}</h2>
+        }
+
+        // changeWeatherState点击几次调用几次
+        changeWeatherState() {
+            // changeWeatherState放在哪里? Weather的原型对象上, 供实例使用
+            // 由于changeWeatherState是转为onClick的回调, 所以不是通过实例调用的, 是直接调用
+            // 类中的方法默认开启了局部的严格模式, 所以changeWeatherState中的this为undefined
+            const {isHot} = this.state
+            // TOP PS: 状态(state)不可直接更改
+            // this.state.isHot = !isHot ×
+            // state必须通过setState更新, 且更新是一种合并, 不是替换
+            this.setState({
+                isHot: !isHot
+            })
+        }
+    }
+    ReactDOM.render(<Weather/>, document.getElementById("test"))
+</script>
+```
+
+###### 如何定义一个state
+
+``` react
+this.state = {
+    name: "Jater",
+    age: 21
+}
+```
+
+###### 如何给JSX标签添加事件
+
+``` jsx
+<h2 onClick={this.类方法名}></h2>
+// JSX语法 驼峰命名法
+```
+
+###### 为什么onClick方法里不能直接使用this.changeWeatherState?
+
+- **由于changeWeatherState方法中使用了this关键字, 而changeWeatherState是转为onClick的回调, 所以不是通过实例调用的, 是直接调用的**
+- **类中的方法默认开启局部的严格模式, 所以changeWeatherState中的this为undefined, 并不是Weather**
+
+###### 如何解决this指向undefined
+
+`this.changeState= this.changeWeatherState.bind(this)`
+
+> 使用bind函数用changeWeatherState产生一个新的Weather对象的方法赋值给新的变量
+>
+> 在onClick方法中使用changeState, 间接调用changeWeatherState
+
+###### 如何修改state的值
+
+- **state不可直接被修改**
+
+- **`this.state.isHot = !isHot` 是错误的语法**
+
+- **state必须通过setState更新, 且更新是一种合并, 不是替换**
+
+  `this.setState({isHot: !isHot})`
+
+###### 各个函数的执行次数
+
+- `构造函数` 1次
+- `render` 1+n次; 1为初始化, n为状态更新次数
+- `changeWeatherState` 点击几次执行几次
+
+
+
+##### 2.2.2 State的简单写法(推荐使用)
+
+``` jsx
+<script type="text/babel">
+    class Weather extends React.Component {
+        // 初始化状态
+        state = {
+            isHot: false,
+            wind: "微风"
+        }
+
+        render() {
+            const {isHot, wind} = this.state
+            return <h1 onClick={this.changeWeather}>So {isHot?"Hot":"Cold"} Today, {wind}</h1>
+        }
+
+        // 自定义方法: 要用赋值语句的形式 + 箭头函数
+        changeWeather = () => {
+            const {isHot} = this.state
+            this.setState({
+                isHot: !isHot
+            })
+        }
+    }
+
+    ReactDOM.render(<Weather/>, document.getElementById("test"))
+</script>
+```
+
+
+
+##### 2.2.3 理解
+
+1. **state是组件对象最重要的属性, 值是对象(可以包含多个key-value的组合)**
+2. **组件被称为"状态机", 通过更新组件的state来更新对象的页面显示(重新渲染组件)**
+
+
+
+##### 2.2.4 强烈注意
+
+1. **组件中render方法中的this为组件实例对象**
+2. **组件自定义的方法中this为undefined.如何解决?**
+   1. **强制绑定this: 通过函数对象的bind()**
+   2. **箭头函数**
+3. **状态数据, 不能直接修改或更新**
+
+-----
+
+
+
 # Others
 
 ## 1. Babel
