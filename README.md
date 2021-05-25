@@ -236,6 +236,30 @@
 
 
 
+## 2. 面向组件编程
+
+#### 2.1 基本理解与使用
+
+##### 2.2.1 函数式组件
+
+``` react
+<script type="text/babel">
+    // 1. 创建函数式组件
+    function Demo() {
+        return <h1>I am Jater</h1>
+    }
+    // 2. 渲染组件到页面
+    ReactDOM.render(<Demo/>, document.getElementById("test"))
+</script>
+```
+
+**执行了`RenderDOM.render(<Demo/>....)`后, 发生了什么事情**
+
+1. React解析组件标签, 找到Demo组件
+2. 发现组件是使用函数定义的, 随后调用该函数, 将返回的虚拟DOM转换成真实DOM, 随后呈现在页面中.
+
+##### 2.2.2 类式组件
+
 # Others
 
 ## 1. Babel
