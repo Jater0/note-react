@@ -710,6 +710,14 @@ class Person extends React.Component {
 - `React.createRef`调用之后可以返回一个容器, 该容器可以存储被ref标识的节点
 - 该容器是"专人专用"的
 
+-----
+
+
+
+#### 2.5 React事件处理
+
+
+
 # Others
 
 ## 1. Babel
