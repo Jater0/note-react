@@ -716,6 +716,48 @@ class Person extends React.Component {
 
 #### 2.5 React事件处理
 
+**事件处理的方式**
+
+1. 通过onXxx属性指定事件处理函数(注意大小写)
+   1. React使用的是自定义(合成)事件, 而不是使用原生DOM事件 --- 为了更好的兼容性
+   2. React中的事件是通过事件委托方式处理的(委托给组件最外层的元素) --- 为了高效
+2. 通过event.target得到发生事件的DOM元素对象 --- 不要过度使用Ref
+
+``` jsx
+<script type="text/babel">
+    class Demo extends React.Component {
+        myRef = React.createRef()
+        render() {
+            return (
+                <div>
+                    <input type="text" placeholder="输入" ref={this.myRef}/>
+                    <button onClick={this.showData}>点击</button>
+                    {/*发生事件的元素刚好是要操作的元素*/}
+                    <input type="text" placeholder="失去焦点" onBlur={this.showData2}/>
+                </div>
+            )
+        }
+        showData = () => {
+            const {current} = this.myRef
+            alert(current.value)
+        }
+        showData2 = (event) => {
+            const {value} = event.target
+            alert(value)
+        }
+    }
+    ReactDOM.render(<Demo/>, document.getElementById("test"))
+</script>
+```
+
+###### 为什么第二个input元素可以使用event.target?
+
+>  因为发生事件的元素刚好是要操作的元素
+
+-----
+
+
+
 
 
 # Others
