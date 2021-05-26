@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>对Props进行限制</title>
+</head>
+<body>
+  <div id="test00"></div>
+  <div id="test01"></div>
+  <div id="test02"></div>
+  <script src="../js/react.development.js"></script>
+  <script src="../js/react-dom.development.js"></script>
+  <script src="../js/babel.min.js"></script>
+  <!-- 用于对组件标签属性进行限制 -->
+  <script src="../js/prop-types.js"></script>
+  <script type="text/babel">
+    class Person extends React.Component {
+      render() {
+        const {name, age, gender} = this.props
+        // props是只读的
+        return (
+          <ul>
+            <li>name: {name}</li>
+            <li>age: {age + 1}</li>
+            <li>gender: {gender}</li>
+          </ul>
+        ) 
+      }
+    }
+    // 对标签属性进行类型、必要性的限制
+    Person.propTypes = {
+      name: PropTypes.string.isRequired,
+      age: PropTypes.number,
+      gender: PropTypes.string,
+      speak: PropTypes.func
+    }
+    // 指定默认标签属性值
+    Person.defaultProps = {
+      gender: "male",
+      age: 18
+    }
+    const p1 = {name: "Jater", age: 21, gender: "male"}
+    const p2 = {name: "Jam", age: 23, gender: "female"}
+    ReactDOM.render(<Person {...p1} speak={speak}/>, document.getElementById("test00"))
+    ReactDOM.render(<Person {...p2}/>, document.getElementById("test01"))
+
+    function speak() {
+      console.log("speaking");
+    }
+  </script>
+</body>
+</html>

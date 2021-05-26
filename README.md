@@ -9,7 +9,7 @@
 1. **声明式编程**
 2. **组件化编程**
 3. **React Native编写原生应用**
-4. **高效(优秀的Diffing算法)**
+4. **高效(优秀的Diffinxxg算法)**
 
 
 
@@ -447,6 +447,145 @@ this.state = {
 3. **状态数据, 不能直接修改或更新**
 
 -----
+
+
+
+#### 2.3 组件实例的三大核心属性 --- props
+
+##### 2.3.1 props传值
+
+``` jsx
+class Person extends React.Component {
+    render() {
+        const {name, age, gender} = this.props
+        return (
+            <ul>
+                <li>name: {name}</li>
+                <li>age: {age + 1}</li>
+                <li>gender: {gender}</li>
+            </ul>
+        )
+    }
+}
+ReactDOM.render(<Person name="Jater" age={18} gender="male"/>, document.getElementById("test"))
+```
+
+##### 2.3.2 props属性限制
+
+``` jsx
+<!-- 用于对组件标签属性进行限制 -->
+<script src="../js/prop-types.js"></script>
+<script type="text/babel">
+    class Person extends React.Component {
+        render() {
+            const {name, age, gender} = this.props
+            // props是只读的
+            return (
+                <ul>
+                    <li>name: {name}</li>
+                    <li>age: {age + 1}</li>
+                    <li>gender: {gender}</li>
+                </ul>
+            ) 
+        }
+    }
+    // 对标签属性进行类型、必要性的限制
+    Person.propTypes = {
+        name: PropTypes.string.isRequired,
+        age: PropTypes.number,
+        gender: PropTypes.string,
+        speak: PropTypes.func
+    }
+    // 指定默认标签属性值
+    Person.defaultProps = {
+        gender: "male",
+        age: 18
+    }
+    const p1 = {name: "Jater", age: 21, gender: "male"}
+    const p2 = {name: "Jam", age: 23, gender: "female"}
+    ReactDOM.render(<Person {...p1} speak={speak}/>, document.getElementById("test00"))
+    ReactDOM.render(<Person {...p2}/>, document.getElementById("test01"))
+
+    function speak() {
+        console.log("speaking");
+    }
+</script>
+```
+
+- 15.5前使用`React.PropTypes.string`
+- 15.5后使用`PropTypes.string`
+
+
+
+- `propTypes`: 对标签属性进行类型、必要性的限制
+- `defaultProps`: 指定默认标签属性
+
+
+
+##### 2.3.3 Props的简单写法
+
+```  react
+class Person extends React.Component {
+    render() {
+        const {name, age, gender} = this.props
+        // props是只读的
+        return (
+            <ul>
+                <li>name: {name}</li>
+                <li>age: {age + 1}</li>
+                <li>gender: {gender}</li>
+            </ul>
+        )
+    }
+
+    static propTypes = {
+        name: PropTypes.string.isRequired,
+        age: PropTypes.number,
+        gender: PropTypes.string,
+        speak: PropTypes.func
+    }
+
+    static defaultProps = {
+        gender: "male",
+        age: 18
+	}	
+}
+```
+
+
+
+##### 2.3.4 函数式组件使用props
+
+``` react
+<script type="text/babel">
+    function person(props) {
+        const {name, age, gender} = props
+        return (
+            <ul>
+                <li>name: {name}</li>
+                <li>age: {age}</li>
+                <li>gender: {gender}</li>
+            </ul>
+        )
+    }
+    // 对标签属性进行类型、必要性的限制
+    Person.propTypes = {
+        name: PropTypes.string.isRequired,
+        age: PropTypes.number,
+        gender: PropTypes.string,
+        speak: PropTypes.func
+    }
+    // 指定默认标签属性值
+    Person.defaultProps = {
+        gender: "male",
+        age: 18
+    }
+    const p1 = {name: "Jater", age: 21, gender: "male"}
+    const p2 = {name: "Jam", age: 23, gender: "female"}
+    ReactDOM.render(<Person {...p1}/>, document.getElementById("test00"))
+    ReactDOM.render(<Person {...p2}/>, document.getElementById("test01"))
+</script>
+```
 
 
 
