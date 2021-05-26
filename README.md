@@ -176,18 +176,18 @@
    ​	下面这些都是表达式
 
    	1. mockData
-    	2. a + b
-    	3. func(1)
-    	4. arr.map()
-    	5. function test() {}
+   	2. a + b
+   	3. func(1)
+   	4. arr.map()
+   	5. function test() {}
 
 2. 语句(代码):
 
    ​	下面这些都是语句(代码):
 
    	1. if () {}
-    	2. for () {}
-    	3. switch() {case:xxx}
+   	2. for () {}
+   	3. switch() {case:xxx}
 
 **遍历数组呈现列表**
 
@@ -587,7 +587,128 @@ class Person extends React.Component {
 </script>
 ```
 
+-----
 
+
+
+#### 2.4 组件实例的三大核心 --- ref
+
+##### 2.4.1 字符串类型的Ref(官方不推荐)
+
+``` jsx
+<script type="text/babel">
+    class Demo extends React.Component {
+        // 字符串类型的Ref(官方不推荐)
+        render() {
+            return (
+                <div>
+                    <input type="text" placeholder="点击按钮提示数据" ref="input1"/>&nbsp;
+                    <button onClick={this.showData}>点击显示左侧数据</button>&nbsp;
+                    <input type="text" placeholder="失去焦点提示数据" onBlur={this.showData2} ref="input2"/>  
+                </div>
+            )
+        }
+        showData = () => {
+            const {input1} = this.refs
+            alert(input1.value)
+        }
+        showData2 = () => {
+            const {input2} = this.refs
+            alert(input2.value)
+        }
+    }
+    ReactDOM.render(<Demo/>, document.getElementById("test"))
+</script>
+```
+
+- 格式: `ref="input1"`
+- 调用: `this.refs.input1`
+- `ref`获取的是当前这个节点的信息
+
+
+
+##### 2.4.2 回调函数形式的Ref
+
+``` jsx
+<script type="text/babel">
+    class Demo extends React.Component {
+        render() {
+            return (
+                <div>
+                    <input type="text" placeholder="输入" ref={currentNode => this.input1 = currentNode}/>
+                    <button onClick={this.showData}>点击</button>
+                    <input type="text" ref={currentNode => this.input2 = currentNode} onBlur={this.showData2}/>
+                </div>
+            )
+        }
+        showData = () => {
+            const {input1} = this
+            alert(input1.value)
+        }
+        showData2 = () => {
+            const {input2} = this
+            alert(input2.value)
+        }
+    }
+    ReactDOM.render(<Demo/>, document.getElementById("test"))
+</script>
+```
+
+- 格式: `ref={currentNode => this.input1 = currentNode}`
+- 调用: `this.input1`
+
+
+
+##### 2.4.3 回调函数式Ref的执行次数
+
+1. 如果是`ref={c => this.input1 = c}`的格式
+
+   - 调用的次数为 `1+n*2`, 1为初始化的次数, n为状态更新的次数
+
+2. 如果是`ref={this.saveRef}`的格式
+
+   ``` js
+   saveRef = (currentNode) => {
+       this.input1 = currentNode
+   }
+   ```
+
+   - 调用的次数为`1+n`
+
+###### 为什么内联格式下调用的次数为1+n*2次?
+
+> **在更新过程中它会被执行两次的原因是: 第一次传入参数`null`, 然后第二次会传入参数DOM元素.**
+>
+> **这是因为在每次渲染时会创建一个新的函数实例, 所以React清空旧的Ref并设置新的.**
+
+
+
+##### 2.4.4 createRef
+
+``` jsx
+<script type="text/babel">
+    class Demo extends React.Component {
+        myRef = React.createRef()
+
+        render() {
+            return (
+                <div>
+                    <input type="text" placeholder="输入" ref={this.myRef}/>
+                    <button onClick={this.showData}>点击</button>
+                </div>
+            )
+        }
+        showData = () => {
+            const {current} = this.myRef
+            alert(current.value)
+        }
+    }
+    ReactDOM.render(<Demo/>, document.getElementById("test"))
+  </script>
+```
+
+- `React.createRef`调用之后可以返回一个容器, 该容器可以存储被ref标识的节点
+- 该容器是"专人专用"的
 
 # Others
 

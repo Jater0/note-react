@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>回调形式的Ref</title>
+</head>
+<body>
+  <div id="test"></div>
+  <script src="../js/react.development.js"></script>
+  <script src="../js/react-dom.development.js"></script>
+  <script src="../js/babel.min.js"></script>
+  <script type="text/babel">
+    class Demo extends React.Component {
+      render() {
+        return (
+          <div>
+            <input type="text" placeholder="输入" ref={currentNode => this.input1 = currentNode}/>
+            <button onClick={this.showData}>点击</button>
+            <input type="text" ref={currentNode => this.input2 = currentNode} onBlur={this.showData2}/>
+          </div>
+        )
+      }
+      showData = () => {
+        const {input1} = this
+        alert(input1.value)
+      }
+      showData2 = () => {
+        const {input2} = this
+        alert(input2.value)
+      }
+    }
+    ReactDOM.render(<Demo/>, document.getElementById("test"))
+  </script>
+</body>
+</html>

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>回调形式的Ref</title>
+</head>
+<body>
+  <div id="test"></div>
+  <script src="../js/react.development.js"></script>
+  <script src="../js/react-dom.development.js"></script>
+  <script src="../js/babel.min.js"></script>
+  <script type="text/babel">
+    class Demo extends React.Component {
+      state = {
+        isHot: true
+      }
+      render() {
+        const {isHot} = this.state
+        return (
+          <div>
+            <h1>So {isHot?"Hot":"Cold"}</h1>
+            <input type="text" ref={this.saveRef}/>
+            <button onClick={this.changeWeather}>Weather Change</button>
+          </div>
+        )
+      }
+      showData = () => {
+        const {input1} = this
+        alert(input1.value)
+      }
+      changeWeather = () => {
+        const {isHot} = this.state
+        this.setState({
+          isHot: !isHot
+        })
+      }
+      saveRef = (currentNode) => {
+        this.input1 = currentNode
+        console.log("currentNode", currentNode);
+      }
+    }
+    ReactDOM.render(<Demo/>, document.getElementById("test"))
+  </script>
+</body>
+</html>
