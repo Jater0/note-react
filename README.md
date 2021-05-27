@@ -758,7 +758,82 @@ class Person extends React.Component {
 
 
 
+#### 2.6 收集表单数据
 
+**表单分为两种**
+
+1. 非受控组件 --- 现用现取
+
+   ``` jsx
+   <script type="text/babel">
+       class Login extends React.Component {
+           render() {
+               return (
+                   <form action="http://www.atguigu.com" onSubmit={this.handleSubmit}>
+                       username: <input type="text" name="username" ref={c => this.username = c}/>
+                       <br/>
+                       password: <input type="password" name="password" ref={c => this.password = c}/>
+                       <br/>
+                       <button>Login</button>
+                   </form>
+               )
+           }
+           // 非受控组件: 现用现取
+           handleSubmit = (event) => {
+               event.preventDefault() // 阻止表单提交
+               const {username, password} = this
+               alert(`你输入的是${username.value}, 密码是${password.value}`)
+           }
+       }
+       ReactDOM.render(<Login/>, document.getElementById("test"))
+   </script>
+   ```
+
+   - **现用现取**: 当用户触发事件才去获取获取值
+
+2. 受控组件
+
+   ``` jsx
+   <script type="text/babel">
+       class Login extends React.Component {
+           state = {
+               username: "",
+               password: ""
+           }
+           render() {
+               return (
+                   <form action="http://www.atguigu.com" onSubmit={this.handleSubmit}>
+                       username: <input type="text" name="username" onChange={this.updateUsername}/>
+                       <br/>
+                       password: <input type="password" name="password" onChange={this.updatePassword}/>
+                       <br/>
+                       <button>Login</button>
+                   </form>
+               )
+           }
+           handleSubmit = (event) => {
+               event.preventDefault() // 阻止表单提交
+               const {username, password} = this.state
+               alert(`你输入的是${username}, 密码是${password}`)
+           }
+           updateUsername = (event) => {
+               const {value} = event.target
+               this.setState({
+                   username: value
+               })
+           }
+           updatePassword = (event) => {
+               const {value} = event.target
+               this.setState({
+                   password: value
+               })
+           }
+       }
+       ReactDOM.render(<Login/>, document.getElementById("test"))
+   </script>
+   ```
+
+   - **好处**: 可以减少ref的使用
 
 # Others
 
