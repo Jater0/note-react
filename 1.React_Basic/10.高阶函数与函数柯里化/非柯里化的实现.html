@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>高阶函数</title>
+</head>
+<body>
+  <div id="test"></div>
+  <script src="../js/react.development.js"></script>
+  <script src="../js/react-dom.development.js"></script>
+  <script src="../js/babel.min.js"></script>
+  <script type="text/babel">
+    class Login extends React.Component {
+      state = {
+        username: "",
+        password: ""
+      }
+      render() {
+        return (
+          <form action="http://www.atguigu.com" onSubmit={this.handleSubmit}>
+            username: <input type="text" name="username" onChange={(event) => {this.saveFormData("username", event.target.value)}}/>
+            <br/>
+            password: <input type="password" name="password" onChange={(event) => {this.saveFormData("password", event.target.value)}}/>
+            <br/>
+            <button>Login</button>
+          </form>
+        )
+      }
+      handleSubmit = (event) => {
+        event.preventDefault() // 阻止表单提交
+        const {username, password} = this.state
+        alert(`你输入的是${username}, 密码是${password}`)
+      }
+      saveFormData = (dataType, value) => {
+        this.setState({
+          [dataType]: value
+        })
+      }
+    }
+    ReactDOM.render(<Login/>, document.getElementById("test"))
+  </script>
+</body>
+</html>
