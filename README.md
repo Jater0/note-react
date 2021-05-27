@@ -835,6 +835,82 @@ class Person extends React.Component {
 
    - **好处**: 可以减少ref的使用
 
+-----
+
+
+
+#### 2.7 高阶函数与函数柯里化
+
+##### 2.7.1 高阶函数
+
+- **普通函数**
+
+  ``` js
+  updateUsername = (event) => {
+      const {value} = event.target
+      this.setState({
+          username: value
+      })
+  }
+  updatePassword = (event) => {
+      const {value} = event.target
+      this.setState({
+          password: value
+      })
+  }
+  ```
+
+- **高阶函数**
+
+  ``` js
+  saveFormData = (dataType) => {
+      return (event) => {
+          const {value} = event.target
+          this.setState({
+              [dataType]: value
+          })
+      }
+  }
+  ```
+
+**如果一个函数符合下面2个规范中的任何一个, 那该函数就是高阶函数**
+
+1. 若函数接收的参数是一个函数, 那么就可以称之为高阶函数
+2. 若函数调用的返回值依然是一个函数, 那么就可以称之为高阶函数
+3. 常见的高阶函数: Promise、setTimeout、arr.map()等
+
+
+
+##### 函数柯里化
+
+- **非柯里化**
+
+  ``` js
+  function sum(a, b, c) {
+      return a + b + c
+  }
+  const result = sum(1, 2, 3)
+  console.log(result);
+  ```
+
+  
+
+- **柯里化**
+
+  ``` js
+  function sum02(a) {
+      return (b) => {
+          return (c) => {
+              return a + b + c
+          }
+      }
+  }
+  const result02 = sum02(1)(2)(3)
+  console.log(result02);
+  ```
+
+**函数柯里化** 通过函数调用, 继续返回函数的方式, 实现多次接收参数最后统一处理的函数编码形式
+
 # Others
 
 ## 1. Babel
