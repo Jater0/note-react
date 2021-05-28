@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>生命周期(新)</title>
+</head>
+<body>
+  <div id="test"></div>
+  <script src="../js/17.0.1/react.development.js"></script>
+  <script src="../js/17.0.1/react-dom.development.js"></script>
+  <script src="../js/17.0.1/babel.min.js"></script>
+  <script src="../js/17.0.1/prop-types.js"></script>
+  <script type="text/babel">
+    /*
+      1. 初始化阶段: 由ReactDOM.render()触发 --- 初次渲染
+          1. constructor()
+          2. getDerivedStateFromProps()
+          3. render()
+          4. componentDidMount()
+      2. 更新阶段: 由组件内部this.setState、this.foreceUpdate()和父组件更新render触发
+          1. getDerivedStateFromProps()
+          2. shouldComponentUpdate()
+          3. render()
+          4. getSnapshotBeforeUpdate()
+          5. componentDidUpdate()
+      3. 卸载组件: 由ReactDOM.unmountComponentAtNode()触发
+          1. componentWillUnmount()
+    */
+    class Count extends React.Component {
+      state = {
+        count: 0
+      }
+
+      add = () => {
+        const {count} = this.state
+        this.setState({
+          count: count + 1
+        })
+      }
+
+      death = () => {
+        ReactDOM.unmountComponentAtNode(document.getElementById("test"))
+      }
+
+      forceUpdateData = () => {
+        this.forceUpdate()
+      }
+
+      render() {
+        return (
+          <div>
+            <h2>Count: {this.state.count}</h2>
+            <button onClick={this.add}>Add 1</button><br/>
+            <button onClick={this.death}>unmount</button><br/>
+            <button onClick={this.forceUpdateData}>Force Update</button>
+          </div>
+        )
+      }
+
+      // 若state的值再任何时候都取决于Props, 那么可以使用getDerivedStateFromProps
+      static getDerivedStateFromProps(props, state) {
+        console.log("getDerivedStateFromProps", props, state);
+        return null
+      }
+
+      // 在componentDidUpdate之前调用.
+      getSnapshotBeforeUpdate() {
+        return "Jater";
+      }
+
+      componentDidUpdate(prevProps, prevState, snapshotValue) {
+        console.log("componentDidUpdate", prevProps, prevState, snapshotValue);
+      }
+    }
+    ReactDOM.render(<Count count={18}/>, document.getElementById("test"))
+  </script>
+</body>
+</html>

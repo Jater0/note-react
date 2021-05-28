@@ -881,7 +881,7 @@ class Person extends React.Component {
 
 
 
-##### 函数柯里化
+##### 2.7.2 函数柯里化
 
 - **非柯里化**
 
@@ -913,7 +913,7 @@ class Person extends React.Component {
 
 
 
-##### 不使用柯里化实现同样效果
+##### 2.7.3 不使用柯里化实现同样效果
 
 - **柯里化**
 
@@ -996,6 +996,151 @@ class Person extends React.Component {
     ReactDOM.render(<Login/>, document.getElementById("test"))
 </script>
 ```
+
+-----
+
+
+
+#### 2.8 生命周期
+
+##### 2.8.1 React生命周期(旧)
+
+![生命周期---旧](/images/React生命周期(旧).png)
+
+**各个阶段的生命周期函数调用顺序**
+
+- **初始化阶段** 由ReactDOM.render()触发
+  1. constructor()
+  2. componentWillMount()
+  3. render()
+  4. componentDidMount() ===> 常用, 通常在这个钩子里做些初始化的事情
+- **更新阶段** 由组件内部this.state()、强制刷新this.forceUpdate()或父组件render触发
+  1. shouldComponentupdate()
+  2. componentWillUpdate()
+  3. render() ===> 常用
+  4. componentDidUpdate()
+- **卸载组件** 由ReactDOM.unmountComponentAtNode()触发
+  1. componentWillUnmount ===> 常用, 通常做些收尾的事情
+
+| 钩子函数名            | 作用                               |
+| --------------------- | ---------------------------------- |
+| componentWillMount    | 组件将要挂载时调用                 |
+| componentDidMount     | 组件已经挂载时调用                 |
+| shouldComponentUpdate | 控制组件更新的阀门(默认为输出true) |
+| componentWillUpdate   | 组件将要更新时调用                 |
+| componentDidUpdate    | 组件已经更新时调用                 |
+| componentWillUnmount  | 组件将被卸载时调用                 |
+
+
+
+##### 2.8.2 React生命周期(新)
+
+![React生命周期(新)](./images/React生命周期(新).png)
+
+**各个阶段生命周期函数调用顺序**
+
+- **初始化阶段** 由ReactDOM.render()触发 --- 初次渲染
+  1. constructor()
+  2. getDerivedStateFromProps()
+  3. render()
+  4. componentDidMount()
+- **更新阶段** 由组件内部this.setState、this.forceUpdate()或父组件更新render触发
+  1. getDerivedStateFromProps()
+  2. shouldComponentUpdate()
+  3. render()
+  4. getSnapshotBeforeUpdate()
+  5. componentDidUpdate()
+- **卸载组件** 由ReactDOMunmountComponentAtNode()触发
+  1. componentWillUnmount()
+
+###### 17.X新添加的钩子函数
+
+| 新添加的钩子函数         | 作用                                     |
+| ------------------------ | ---------------------------------------- |
+| getDerivedStateFromProps | 若state的值在任何时候都取决于Props时调用 |
+| getSnapshotBeforeUpdate  | 在更新状态之前获取获取快照               |
+
+###### 即将被抛弃的钩子
+
+1. componentWillMount
+2. componentWillReceiveProps
+3. componentWillUpdate
+
+现在使用会出现警告, 下一个大版本需要加上UNSAFE_前缀才能使用, 以后可能会被废弃, 不建议使用.
+
+
+
+##### 2.8.3 getSnapshotBeforeUpdate案例
+
+``` jsx
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>getSnapshotBeforeUpdate</title>
+  <style>
+    .list {
+      width: 200px;
+      height: 150px;
+      background-color: skyblue;
+      overflow: auto;
+    }
+    .news {
+      height: 30px;
+    }
+  </style>
+</head>
+<body>
+  <div id="test"></div>
+  <script src="../js/17.0.1/react.development.js"></script>
+  <script src="../js/17.0.1/react-dom.development.js"></script>
+  <script src="../js/17.0.1/babel.min.js"></script>
+  <script src="../js/17.0.1/prop-types.js"></script>
+  <script type="text/babel">
+    class NewsList extends React.Component {
+
+      state = {
+        newsArr: []
+      }
+
+      componentDidMount() {
+        setInterval(() => {
+          const {newsArr} = this.state
+          const news = "新闻" + (newsArr.length + 1)
+          this.setState({
+            newsArr: [news, ...newsArr]
+          })
+        }, 1000)
+      }
+
+      getSnapshotBeforeUpdate() {
+        return this.refs.list.scrollHeight
+      }
+
+      componentDidUpdate(prevProps, prevState, snapshotValue) {
+        // 当状态更新时, 获取更新前的list的高度, 减去显示list的高度, 获取添加项的高度
+        this.refs.list.scrollTop += this.refs.list.scrollHeight - snapshotValue
+      }
+
+      render() {
+        return (
+          <div className="list" ref="list">
+            {this.state.newsArr.map((n, index) => {
+              return <div className="news" key={index}>{n}</div>
+            })}
+          </div>
+        )
+      }
+    }
+    ReactDOM.render(<NewsList/>, document.getElementById("test"))
+  </script>
+</body>
+</html>
+```
+
+
 
 
 
