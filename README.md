@@ -1313,6 +1313,26 @@ class Person extends React.Component {
 
 
 
+## 3. React应用(基于脚手架)
+
+#### 3.1 使用create-react-app创建React应用
+
+##### 3.1.1 React脚手架
+
+1. **脚手架** 用来帮助程序员快速创建一个基于xxx库的模板项目
+2. React提供了一个用于创建React项目的脚手架库: create-react-app
+3. 项目的整体技术框架: React + webpack + ES6 + eslint
+4. 使用脚手架开发的项目的特点: 模块化、组件化、工程化
+
+##### 3.1.2 创建项目并启动
+​	step 1: 全局安装: npm install create-react-app -g
+​	step 2: 创建项目: create-react-app hello-react
+​	step 3: 进入项目: cd hello-react
+​	step 4: 启动项目: npm start
+
+
+
+
 # Others
 
 ## 1. Babel
