@@ -1324,11 +1324,65 @@ class Person extends React.Component {
 3. 项目的整体技术框架: React + webpack + ES6 + eslint
 4. 使用脚手架开发的项目的特点: 模块化、组件化、工程化
 
+
+
 ##### 3.1.2 创建项目并启动
 ​	step 1: 全局安装: npm install create-react-app -g
 ​	step 2: 创建项目: create-react-app hello-react
 ​	step 3: 进入项目: cd hello-react
 ​	step 4: 启动项目: npm start
+
+
+
+##### 3.1.3 React项目常用配置
+
+``` html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <!-- %PUBLIC_URL%代表public文件夹的路径 -->
+    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+    <!-- 移动端适配 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- 用于配置浏览器页签 + 地址栏的颜色(仅支持Android手机浏览器) -->
+    <meta name="theme-color" content="#000000" />
+    <!-- 简介 -->
+    <meta
+      name="description"
+      content="Web site created using create-react-app"
+    />
+    <!-- 苹果手机主屏幕图标 -->
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+    <!-- 应用加壳时的配置文件 -->
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+    <title>React App</title>
+  </head>
+  <body>
+    <!-- 浏览器不支持JavaScript显示 -->
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+  </body>
+</html>
+```
+
+-----
+
+
+
+#### 3.2 Hello React脚手架版
+
+- 可以使用.jsx替代React的.js文件
+
+-----
+
+
+
+#### 3.3 样式模块化
+
+- 使用xxx.module.css的形式创建css文件
+- 在jsx/js文件中引入 `import hello from "./Hello.module.css"`
+- 使用: `className={hello.title}`
 
 
 
