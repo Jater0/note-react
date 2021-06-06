@@ -1384,7 +1384,15 @@ class Person extends React.Component {
 - 在jsx/js文件中引入 `import hello from "./Hello.module.css"`
 - 使用: `className={hello.title}`
 
+-----
 
+
+
+#### 3.4 Todo List案例
+
+- defaultChecked和checked的区别
+- 父子组件通信
+- state在哪, 操作状态的方法就在哪
 
 
 # Others
