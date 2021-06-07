@@ -1394,6 +1394,72 @@ class Person extends React.Component {
 - 父子组件通信
 - state在哪, 操作状态的方法就在哪
 
+-----
+
+
+
+#### 3.5 React脚手架配置代理总结
+
+##### 方法一
+
+> 在package.json中追加如下配置
+
+```json
+"proxy": "http://localhost:5000"
+```
+
+**说明**
+
+- **优点** 配置简单, 前端请求资源时可以不加任何前缀
+- **缺点** 不能配置多个代理
+- **工作方式** 上述方式配置代理, 当请求了3000不存在的资源时, 那么请求会转发给5000(优先匹配前端资源)
+
+##### 方法二
+
+1. **step one** 创建代理配置文件
+
+``` none
+在src下创建配置文件: setupProxy.js
+```
+
+2. **step two** 编写setupProxy.js配置具体代理规则 
+``` js
+const proxy = require("http-proxy-middleware")
+
+module.exports = function (app) {
+  app.use(
+    proxy("/api1", { // 遇见api1前缀的请求就会触发该代理配置
+      target: "http://localhost:5000", // 请求转发给谁
+      changeOrigin: true, // 控制服务器收到的请求头中Host字段的值
+      /*
+      	changeOrigin设置为true时, 服务器收到的请求头中的Host为: localhost:5000
+      	changeOrigin设置为false时, 服务器收到的请求头中的Host为: localhost:3000
+      	changeOrigin默认值为false, 但我们一般将changeOrigin设置为true
+      */
+      // 重写请求路径
+      pathRewrite: {
+        "^/api1": ""
+      }
+    }),
+    proxy("/api2", {
+      target: "http://localhost:5001",
+      changeOrigin: true,
+      pathRewrite: {
+        "^/api2": ""
+      }
+    })
+  )
+}
+```
+
+**说明**
+
+- **优点** 可以配置多个代理, 可以灵活的控制请求是否走代理.
+- **缺点** 配置繁琐, 前端请求资源时必须加前缀
+
+-----
+
+
 
 # Others
 
