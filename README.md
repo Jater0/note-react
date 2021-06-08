@@ -1465,9 +1465,109 @@ module.exports = function (app) {
 
 #### 4.1 Github用户搜索案例 --- axios
 
+``` js
+axios.get(`/api1/search/users?q=${keyword}`).then(
+    response => {
+        this.props.updateAppState({
+            isLoading: false,
+            users: response.data.items
+        })
+    },
+    error => {
+        this.props.updateAppState({
+            isLoading: false,
+            err: error.message
+        })
+    }
+)
+```
+
+-----
 
 
-#### 4.2 消息订阅 --- 发布机制
+
+#### 4.2 消息订阅&发布机制 --- pubsub-js
+
+- **`yarn add pubsub-js`**
+- **`import PubSub from "pubsub-js"`**
+
+``` js
+// List.jsx
+componentDidMount() {
+    this.token = PubSub.subscribe("jater", (_, state) => {
+        this.setState(state)
+    })
+}
+
+componentWillUnmount() {
+    PubSub.unsubscribe(this.token)
+}
+```
+
+``` jsx
+search = () => {
+    const {keywordElement: {value: keyword}} = this
+    PubSub.publish("jater", {
+        isFirst: false,
+        isLoading: true
+    })
+    axios.get(`/api1/search/users2?q=${keyword}`).then(
+        response => {
+            PubSub.publish("jater", {
+                isLoading: false,
+                users: response.data.items
+            })
+        },
+        error => {
+            PubSub.publish("jater", {
+                isLoading: false,
+                err: error.message
+            })
+        }
+    )
+}
+```
+
+----
+
+
+
+#### 4.3 fetch发送请求(关注分离的设计思想)
+
+``` jsx
+fetch(`/api1/search/users2?q=${keyword}`).then(
+    response => {
+        console.log("Success", response);
+        return response.json()
+    }
+).then(
+    response => {
+        console.log("Success", response);
+    }
+).catch(
+    error => {
+        console.log("Failed", error);
+    }
+)
+```
+
+``` jsx
+try {
+    const response = await fetch(`/api1/search/users2?q=${keyword}`)
+    const data = await response.json()
+    PubSub.publish("jater", {
+        isLoading: false,
+        users: data.items
+    })
+} catch (error) {
+    PubSub.publish("jater", {
+        isLoading: false,
+        err: error.message
+    })
+}
+```
+
+-----
 
 
 
