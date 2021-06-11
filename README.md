@@ -1571,6 +1571,294 @@ try {
 
 
 
+## 5. React Route
+
+#### 5.1 相关理解
+
+##### 5.1.1 SPA
+
+1. 单页Web应用(Single page web application, SPA)
+2. 整个应用只有**一个完整的页面**
+3. 点击页面中的链接不会刷新页面, 只会做页面的局部更新
+4. 数据都需要通过ajax请求获取, 并在前端异步展现
+
+
+
+##### 5.1.2 Route
+
+1. **什么是Route**
+   1. 一个路由就是一个映射关系(key:value)
+   2. key为路径, value可能是function或component
+2. **Route分类**
+   1. 后端路由
+   	1) 理解: value是function, 用来处理客户端提交的请求
+   	
+   	2) 注册路由: router.get(path, function(req, res))
+   	
+		3) 工作过程: 当node接收到一个请求时, 根据请求路径找到匹配的路由, 调用路由中的函数来处理请求, 返回响应数据
+		
+	2. 前端路由
+	    1) 浏览器端路由, value是component, 用来展示页面内容
+	
+	  2) 注册路由: <Route path="/test" component={Test}>
+	
+	  3) 工作过程: 当浏览器的path变为/test时, 当前路由组件就会变为Test组件
+
+-----
+
+
+
+#### 5.2 React Router相关API
+
+##### 5.2.1 内置组件
+
+1. <BrowserRouter>
+2. <HashRouter>
+3. <Route>
+4. <Redirect>
+5. <Link>
+6. <NavLink>
+7. <Switch>
+
+##### 5.2.2 其他
+
+1. history对象
+2. match对象
+3. withRouter函数
+
+-----
+
+
+
+#### 5.3 Route基本使用
+
+1. 可以将元素HTML标签中的a标签改为<Link>
+
+   `<Link to="/xxx">Demo</Link>`
+
+2. 使用<Route>进行路径匹配
+
+   `<Route path="/xxx" component={Demo}/>`
+
+3. <App>的最外侧包裹一个<BrowserRouter>或<HashRouter>
+
+-----
+
+
+
+#### 5.4 路由组件与一般组件
+
+1. 写法不同
+
+   一般组件: <Demo/>
+
+   路由组件: <Route path="/demo" component={Demo}/>
+
+2. 存放位置不同
+
+   一般组件: components
+
+   路由组件: pages
+
+3. 接收到的props不同
+
+   一般组件: 写组件标签时传递了什么, 就能收到什么
+
+   路由组件: 接收到三个固定属性
+
+   ```
+   history:
+   	go: f go(n)
+   	goBack: f goBack()
+   	goForward: f goForward()
+   	push: f push(path, state)
+   	replace: f replace(path, state)
+   location:
+   	pathname: "/about"
+   	search: ""
+   	state: undefined
+   match:
+   	params: {}
+   	path: "/about"
+   	urlL "/about"	
+   ```
+
+-----
+
+
+
+#### 5.5 NavLink与封装NavLink
+
+##### 5.5.1 NavLink
+
+- NavLink可以实现路由链接的高亮
+- 通过activeClassName指定样式名
+
+```jsx
+<NavLink activeClassName="jater" className="list-group-item" to="/about">About</NavLink>
+```
+
+
+
+##### 5.5.2 封装NavLink
+
+``` jsx
+import React, { Component } from 'react'
+import { NavLink } from 'react-router-dom'
+
+export default class MyNavLink extends Component {
+  render() {
+    return (
+      <NavLink activeClassName="jater" className="list-group-item" {...this.props} />
+    )
+  }
+}
+```
+
+-----
+
+
+
+#### 5.6 Switch
+
+- 通常情况下, path和component是一一对应的关系
+- Switch可以提高路由匹配效率(单一匹配)
+
+``` jsx
+<Switch>
+    <Route path="/about" component={About} />
+    <Route path="/home" component={Home} />
+    <Route path="/home" component={Tester} />
+</Switch>
+```
+
+-----
+
+
+
+#### 5.7 解决多级路径刷新页面样式丢失问题
+
+1. public/index.html中引入样式时不写 ./ 写 /
+
+   <link rel="stylesheet" href="%PU/css/bootstrap.css">
+
+2. public/index.html中引入样式时不写 ./ 写 %PUBLIC_URL%
+
+   `<link rel="stylesheet" href="%PUBLIC_URL%/css/bootstrap.css">`
+
+3. 使用HashRouter
+
+-----
+
+
+
+#### 5.8 路由的严格匹配与模糊匹配
+
+- 默认使用的是模糊匹配
+- 开启严格匹配: <Route exact={true} path="/about" component={About}/>
+- 严格匹配不要随便开启, 需要再开, 有些时候开启会导致无法继续匹配二级路由
+
+-----
+
+
+
+#### 5.9 Redirect
+
+- 一般写在所有路由注册的最下方, 当所有路由都无法匹配时, 跳转到Redirect指定的路由
+
+``` jsx
+<Switch>
+	<Route path="/about" component={About}/>
+    <Route path="/home" component={Home}/>
+    <Redirect to="/about"/>
+</Switch>
+```
+
+-----
+
+
+
+#### 5.10 嵌套路由
+
+- 注册子路由时需要写上父路由的path值
+- 路由的匹配是按照注册路由的顺序进行的
+
+-----
+
+
+
+#### 5.11 向路由组件传递参数
+
+1. params
+
+   ``` jsx
+   路由链接(携带参数): <Link to="/demo/test/jater/21">Title</Link>
+   注册路由(声明接收): <Route path="demo/test/:name/:age" component={Test}/>
+   接收参数: this.props.match.params
+   ```
+
+2. search
+
+   ``` jsx
+   路由链接(携带参数): <Link to="/demo/test?name=jater&age=21">Title</Link>
+   注册路由(声明接收): <Route path="demo/test" component={Test}/>
+   接收参数: this.props.location.search
+   PS: 获取到的search是urlencoded编码字符串, 需要借助querystring解析
+   ```
+
+3. state
+
+   ``` jsx
+   路由链接(携带参数): <Link to={{pathname: "/demo/test", state: {name: "jater", age: 21}}}>Title</Link>
+   注册路由(声明接收): <Route path="/demo/test" component={Test}/>
+   接收参数: this.props.location.state
+   PS: 刷新也可以保留住参数
+   ```
+
+-----
+
+
+
+#### 5.12 编程式路由导航
+
+**借助`this.props.history`对象上的API对操作路由跳转、前进、后退**
+
+- **`this.props.history.push()`**
+- **`this.props.history.replace()`**
+- **`this.props.history.goBack()`**
+- **`this.props.history.goForward()`**
+- **`this.props.history.go()`**
+
+-----
+
+
+
+#### 5.13 BrowseeRouter与HashRouter的区别
+
+1. 底层原理不一样:
+
+     BrowserRouter使用的是H5的history API, 不兼容IE9及以下版本.
+
+     HashRouter使用的是URL的哈希值
+
+2. URL表现形式不一样
+
+   BrowserRouter的路径中没有#, 如: localhost:3000/a/b/c
+
+   HashRouter的路径包含#, 如: localhost:3000/#/a/b/c
+
+3. 刷新后对路由state参数的影响
+
+     1) BrowserRouter没有任何影响, 因为state保存在history对象中
+
+     2) HashRouter刷新后会导致路由state参数的丢失
+
+4. PS: HashRouter可以用于解决一些路径错误相关的问题
+
+-----
+
+
+
 # Others
 
 ## 1. Babel

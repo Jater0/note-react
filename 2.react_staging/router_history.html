@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>前端路由的基石 history</title>
+</head>
+<body>
+  <a href="http://www.atguigu.com" onclick="return push('/test1')">Push Test1</a>
+  <br>
+  <br>
+  <button onclick="push('/test2')">Push Test2</button>
+  <button onclick="replace('/test3')">Replace Test3</button>
+  <button onclick="back()">Back</button>
+  <button onclick="forward()">Forward</button>
+
+  <script src="https://cdn.bootcss.com/history/4.7.2/history.jd"></script>
+  <script>
+    let history = History.createBrowserHistory()
+    function push(path) {
+      history.push(path)
+      return false
+    }
+    function replace(path) {
+      history.replace(path)
+    }
+    function back() {
+      history.goBack()
+    }
+    function forward() {
+      history.goForward()
+    }
+    history.listen((location) => {
+      console.log("请求路由路径变化了", location)
+    })
+  </script>
+</body>
+</html>
