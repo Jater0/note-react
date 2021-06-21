@@ -1892,6 +1892,88 @@ class Header extends Component {
 export default withRouter(Header)
 ````
 
+-----
+
+
+
+## 6. Antd
+#### 6.1 Antd基本使用
+
+1. `yarn add antd`
+
+``` jsx
+import React, { Component } from 'react'
+import {Button, DatePicker} from "antd"
+import "antd/dist/ant"
+export default class App extends Component {
+  render() {
+    return (
+      <div>
+        <Button type="primary">Primary Button</Button>
+        <br />
+        <Button type="ghost">Ghost Button</Button>
+        <br />
+        <DatePicker />
+      </div>
+    )
+  }
+}
+```
+
+-----
+
+
+
+#### 6.2 按需引入样式(Antd版本 3.x)
+
+1. `yarn add react-app-rewired customize-cra`
+
+2. **根目录下新建文件**`config-overrides.js`
+
+   ```js
+   module.exports = function override(config, env) {
+     // do stuff with the webpack config...
+     return config;
+   }
+   ```
+
+3. **修改**`package.json`
+
+   ``` json
+   "scripts": {
+       "start": "react-app-rewired start",
+       "build": "react-app-rewired build",
+       "test": "react-app-rewired test",
+       "eject": "react-scripts eject"
+   }
+   ```
+
+4. `yarn add babel-plugin-import`
+
+5. **修改**`config-overrides.js`
+
+   ``` js
+   // 配置具体修改规则
+   const { override, fixBabelImports } = require("customize-cra")
+   
+   module.exports = override(
+     fixBabelImports("import", {
+       libraryName: "antd",
+       libraryDirectory: "es",
+       style: "css"
+     })
+   )
+   ```
+
+
+-----
+
+
+
+#### 6.3 自定义样式
+
+1. `yarn add less less-loader`
+2. **修改**`config-overrodes.js`
 
 
 # Others
